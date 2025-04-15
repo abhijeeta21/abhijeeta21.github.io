@@ -1,3 +1,7 @@
+export const dynamic = "force-static";
+export const dynamicParams = false;
+export const revalidate = false;
+
 import { getBlogPostById, updateBlogPost, deleteBlogPost } from '../../../lib/blog-utils';
 
 // GET handler to retrieve a specific blog post
