@@ -1,0 +1,29 @@
+{
+  "name": "homepage",
+  "version": "1.0.0",
+  "description": "A modern, responsive portfolio website built with Next.js, featuring interactive elements, animations, and a clean design. This portfolio includes sections for your resume, blog posts, achievements, and contact information.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "dev:fast": "set NEXT_TELEMETRY_DISABLED=1 && set NODE_ENV=development && next dev",
+    "dev:quick": "set NEXT_TELEMETRY_DISABLED=1 && set NODE_OPTIONS=--no-warnings && next dev --no-lint",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "next": "^15.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remark": "^15.0.1",
+    "remark-html": "^16.0.1"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.11.21"
+  }
+}

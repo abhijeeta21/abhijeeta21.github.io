@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #000000; /* Black */
+  --primary-gradient: linear-gradient(135deg, #000000, #333333); /* Black to dark gray gradient */
+  --secondary-color: #06b6d4; /* Cyan - energetic accent */
+  --text-color: #374151; /* Gray-700 */
+  --text-color-light: #6b7280; /* Gray-500 */
+  --background-color: #0a0a0a; /* Very dark background */
+  --background-color-dark: #0a0a0a; /* Dark background for sections */
+  --card-background: #111111; /* Slightly lighter than background */
+  --border-color: #333333; /* Dark border */
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --box-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.4);
+  --transition: all 0.3s ease;
+  --font-family-casual: 'Montserrat', sans-serif;
+  --font-family-main: 'Montserrat', sans-serif;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 0.15;
+}
+
+/* Commented out debugging outline
+* {
+  outline: 1px solid red;
+}
+*/
+
+* {
+  box-sizing: border-box; /* Ensure padding and borders are included in element dimensions */
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw; /* Prevent horizontal overflow */
+  overflow-x: hidden; /* Prevent horizontal overflow globally */
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-main), -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  color: #ffffff;
+  background: var(--background-color);
+  background-size: cover;
+  background-attachment: fixed;
+  line-height: 1.8;
+  padding-top: 80px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus, button:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+section {
+  position: relative;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444444;
+}
+
+/* Utility classes */
+.text-gradient {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Enhanced masking effect for image backgrounds */
+.mask-bg-color {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.blend-multiply {
+  position: relative;
+  mix-blend-mode: multiply;
+}
+
+.blend-screen {
+  position: relative;
+  mix-blend-mode: screen;
+}
+
+/* Fix for Safari and other browsers */
+@supports (-webkit-touch-callout: none) {
+  .text-gradient {
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+button, .primaryButton {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
+}
+
+button:hover, .primaryButton:hover {
+  transform: translateY(-2px) scale(1.02); /* Slight scaling for better feedback */
+  box-shadow: var(--box-shadow-hover);
+}
+
+.card {
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
+  padding: 2rem;
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--box-shadow-hover);
+}
+
+/* Parallax scene styling */
+.nectar-parallax-scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  margin-left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  backface-visibility: hidden;
+  transform: translate3d(0px, 0px, 0px);
+  transform-style: preserve-3d;
+}
+
+.nectar-parallax-scene li {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+.nectar-parallax-scene li div {
+  margin-left: -10%;
+  top: -10%;
+  min-height: 100%;
+  width: 120%;
+  height: 120%;
+  background-size: cover;
+  margin-bottom: 0;
+  max-width: none;
+  position: relative;
+  backface-visibility: hidden;
+  transform: translate3d(0px, 0px, 0px);
+  transform-style: preserve-3d;
+}
+
+/* Fix for sections causing overflow */
+.section {
+  overflow: hidden; /* Prevent nested scrollbars */
+}
