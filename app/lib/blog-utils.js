@@ -2,10 +2,15 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-const blogsDirectory = path.join(process.cwd(), 'app/data/blogs');
+// Use a function to determine the correct blogs directory path
+function getBlogsDirectory() {
+  return path.join(process.cwd(), 'app/data/blogs');
+}
 
 // Get all blog posts
 export function getAllBlogPosts() {
+  const blogsDirectory = getBlogsDirectory();
+  
   // Ensure the directory exists
   if (!fs.existsSync(blogsDirectory)) {
     return [];
@@ -30,10 +35,17 @@ export function getAllBlogPosts() {
     // Use gray-matter to parse the post metadata section
     const matterResult = matter(fileContents);
 
+    // Ensure coverImage path is prefixed correctly for GitHub Pages
+    let coverImage = matterResult.data.coverImage || '/images/blog/default.jpg';
+    if (coverImage.startsWith('/')) {
+      coverImage = `.${coverImage}`;
+    }
+
     // Combine the data with the id
     return {
       id,
       ...matterResult.data,
+      coverImage,
       content: matterResult.content
     };
   });
@@ -65,6 +77,8 @@ export function getBlogPostById(id) {
 // Create a new blog post
 export function createBlogPost(title, content, excerpt, coverImage = '/images/blog/default.jpg') {
   try {
+    const blogsDirectory = getBlogsDirectory();
+    
     // Create a slug from the title
     const slug = title
       .toLowerCase()
@@ -113,6 +127,8 @@ export function createBlogPost(title, content, excerpt, coverImage = '/images/bl
 // Update an existing blog post
 export function updateBlogPost(id, title, content, excerpt, coverImage) {
   try {
+    const blogsDirectory = getBlogsDirectory();
+    
     // Find all markdown files
     const fileNames = fs.readdirSync(blogsDirectory);
     
@@ -153,6 +169,8 @@ export function updateBlogPost(id, title, content, excerpt, coverImage) {
 // Delete a blog post
 export function deleteBlogPost(id) {
   try {
+    const blogsDirectory = getBlogsDirectory();
+    
     // Find all markdown files
     const fileNames = fs.readdirSync(blogsDirectory);
     

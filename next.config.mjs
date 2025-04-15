@@ -3,7 +3,15 @@ const nextConfig = {
   // Enable image optimization for better performance
   images: {
     domains: ['localhost'],
-    // Add other image domains if needed for your blog or other content
+    // Add GitHub Pages domain to allowed domains
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.github.io',
+      },
+    ],
+    // Make images work properly with static exports
+    unoptimized: process.env.NODE_ENV === 'production',
   },
   
   // Only enable strict mode in production for faster development experience
@@ -18,8 +26,14 @@ const nextConfig = {
     optimizePackageImports: ['react-dom', 'react'],
   },
 
-  // Use standalone output only in production
-  output: process.env.NODE_ENV === 'production' ? 'standalone' : undefined,
+  // Set the base path for GitHub Pages deployment
+  basePath: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_PATH || '' : '',
+  
+  // Set assetPrefix for GitHub Pages
+  assetPrefix: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_PATH || '' : '',
+  
+  // Use static output for GitHub Pages compatibility
+  output: 'export',
 
   // Webpack optimizations
   webpack(config, { dev, isServer }) {
@@ -33,9 +47,6 @@ const nextConfig = {
         })
       );
     }
-
-    // Don't modify devtool to avoid performance warnings
-    // Don't use filesystem cache to avoid path resolution issues
 
     return config;
   },

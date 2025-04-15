@@ -150,7 +150,7 @@ export default function Home() {
           
           <div className={styles.blendMultiply + ' ' + styles.fullSize}>
             <div className={styles.animatedBg + ' ' + styles.fullSize} 
-                 style={{backgroundImage: "url('/images/hero-bg-dark.jpg')"}}></div>
+                 style={{backgroundImage: "url('./images/hero-bg-dark.jpg')"}}></div>
             
             <div className={styles.blendScreen + ' ' + styles.elementMask + ' ' + styles.fullSize}>
               <span ref={circleRef} className={styles.circleFollow}>
@@ -233,7 +233,7 @@ export default function Home() {
             <div className={styles.aboutImage}>
               <div className={styles.imageContainer}>
                 <Image 
-                  src="/images/profile.jpg" 
+                  src="./images/profile.jpg" 
                   alt="Abhijeet" 
                   width={280}
                   height={350}
