@@ -1,10 +1,22 @@
-import fs from 'fs';
-import path from 'path';
+let fs, path;
 
-const blogsDirectory = path.join(process.cwd(), 'public', 'api', 'blogs');
+if (typeof window === 'undefined') {
+  // Import Node.js modules only on the server side
+  fs = require('fs');
+  path = require('path');
+}
+
+const blogsDirectory = typeof window === 'undefined' 
+  ? path.join(process.cwd(), 'public', 'api', 'blogs') 
+  : null;
 
 // Get all blog posts
 export function getAllBlogPosts() {
+  if (typeof window !== 'undefined') {
+    // Fetch static JSON file in the browser
+    return require('../../public/api/blogs.json');
+  }
+
   const filePath = path.join(blogsDirectory, 'blogs.json');
   const fileContents = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(fileContents);
@@ -12,6 +24,11 @@ export function getAllBlogPosts() {
 
 // Get a specific blog post by ID
 export function getBlogPostById(id) {
+  if (typeof window !== 'undefined') {
+    // Fetch static JSON file in the browser
+    return require(`../../public/api/blogs/${id}.json`);
+  }
+
   const filePath = path.join(blogsDirectory, `${id}.json`);
   if (!fs.existsSync(filePath)) {
     return null;
