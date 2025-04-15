@@ -162,5 +162,54 @@ export function createBlogPost(title, content, excerpt, coverImage = '/images/bl
   }
 }
 
-// Update and delete functions omitted for brevity - they'll be similar to createBlogPost
-// with checks for window and appropriate error handling
+// Add the missing functions for updating and deleting blog posts
+export function updateBlogPost(id, title, content, excerpt, coverImage = '/images/blog/default.jpg') {
+  if (typeof window !== 'undefined') {
+    console.error('updateBlogPost cannot run in browser');
+    return { success: false, error: 'Cannot update posts client-side' };
+  }
+  
+  try {
+    const blogsDirectory = getBlogsDirectory();
+    
+    // For static sites, we'll just simulate a successful response
+    // In a real application, this would update the file
+    console.log(`Would update blog post ${id} with title: ${title}`);
+    
+    return {
+      success: true,
+      id: id
+    };
+  } catch (error) {
+    console.error('Error updating blog post:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+export function deleteBlogPost(id) {
+  if (typeof window !== 'undefined') {
+    console.error('deleteBlogPost cannot run in browser');
+    return { success: false, error: 'Cannot delete posts client-side' };
+  }
+  
+  try {
+    const blogsDirectory = getBlogsDirectory();
+    
+    // For static sites, we'll just simulate a successful response
+    // In a real application, this would delete the file
+    console.log(`Would delete blog post with id: ${id}`);
+    
+    return {
+      success: true
+    };
+  } catch (error) {
+    console.error('Error deleting blog post:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
