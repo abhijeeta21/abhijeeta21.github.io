@@ -8,7 +8,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next build",
+    "static": "next build",
+    "deploy": "next build && touch out/.nojekyll && cp -r out/* ."
   },
   "keywords": [],
   "author": "",

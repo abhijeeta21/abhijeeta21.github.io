@@ -3,54 +3,30 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './page.module.css';
+import { getAllBlogPosts } from '../../lib/blog-utils';
 
 export default function AdminBlogsPage() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch all blog posts
+  // Fetch blog posts client-side
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const response = await fetch('/api/blogs');
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch blogs');
-        }
-        
-        const data = await response.json();
-        setBlogs(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-    
-    fetchBlogs();
+    try {
+      // For static sites, get blogs directly from utility
+      const blogPosts = getAllBlogPosts();
+      setBlogs(blogPosts);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading blogs:', error);
+      setError('Failed to load blog posts');
+      setLoading(false);
+    }
   }, []);
 
-  // Delete a blog post
+  // Note: Delete functionality won't work in a static site
   const handleDeleteBlog = async (id) => {
-    if (window.confirm('Are you sure you want to delete this blog post?')) {
-      try {
-        const response = await fetch(`/api/blogs/${id}`, {
-          method: 'DELETE',
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to delete blog post');
-        }
-        
-        // Remove the deleted blog from the state
-        setBlogs(blogs.filter(blog => blog.id !== id));
-      } catch (error) {
-        console.error('Error deleting blog post:', error);
-        alert('Failed to delete blog post');
-      }
-    }
+    alert('Delete functionality is not available in the static version of the site.');
   };
 
   if (loading) {
@@ -65,6 +41,9 @@ export default function AdminBlogsPage() {
     <div className={styles.adminContainer}>
       <header className={styles.adminHeader}>
         <h1>Blog Management</h1>
+        <p style={{ color: 'orange', marginBottom: '1rem' }}>
+          Note: This is a static site. Admin functionality is limited in this mode.
+        </p>
         <Link href="/admin/blogs/new" className={styles.primaryButton}>
           Create New Blog Post
         </Link>
@@ -85,8 +64,8 @@ export default function AdminBlogsPage() {
                   <p className={styles.blogExcerpt}>{blog.excerpt}</p>
                 </div>
                 <div className={styles.blogActions}>
-                  <Link href={`/admin/blogs/edit/${blog.id}`} className={styles.editButton}>
-                    Edit
+                  <Link href={`/blog/${blog.id}`} className={styles.editButton}>
+                    View
                   </Link>
                   <button 
                     className={styles.deleteButton}

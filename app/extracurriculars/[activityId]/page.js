@@ -1,7 +1,20 @@
 import styles from './page.module.css';
 import Link from 'next/link';
 
-export default function ActivityPage({ params }) {
+// Generate static paths for all activities
+export function generateStaticParams() {
+  return [
+    { activityId: 'core-team-member' },
+    { activityId: 'electronics-club' },
+    { activityId: 'placement-office' },
+    { activityId: 'outreach-cell' },
+    { activityId: 'academic-mentor' },
+    { activityId: 'student-guide' }
+  ];
+}
+
+// Make the component async to properly handle params
+export default async function ActivityPage({ params }) {
   const { activityId } = params;
   
   // Activity content mapping

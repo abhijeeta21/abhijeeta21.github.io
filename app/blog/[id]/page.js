@@ -1,30 +1,23 @@
-import fs from 'fs';
-import path from 'path';
-import { getBlogPostById } from '../../lib/blog-utils';
-import { remark } from 'remark';
-import html from 'remark-html';
 import Link from 'next/link';
 import styles from './page.module.css';
+import { remark } from 'remark';
+import html from 'remark-html';
 
-// Generate static params for all blog posts
-export async function generateStaticParams() {
-  const blogsDirectory = path.join(process.cwd(), 'app/data/blogs');
-  
-  // Check if the directory exists
-  if (!fs.existsSync(blogsDirectory)) {
-    return [];
+// Static blog data
+const blogPosts = [
+  {
+    id: 'HSS',
+    title: "Missing the HSS Pre-Registration Deadline",
+    date: "2025-04-15",
+    excerpt: "Why professors are so negligient giving courses if a student misses the HSS pre-registration",
+    coverImage: "/images/blog/react-hooks.jpg",
+    content: "# Making the preference list for HSS\n\nI spent 4 hours making the HSS pref. list ...will continue the story later."
   }
-  
-  const fileNames = fs.readdirSync(blogsDirectory);
-  
-  // Filter markdown files and exclude README
-  const mdFiles = fileNames.filter(file => 
-    file.endsWith('.md') && file !== 'README.md'
-  );
-  
-  return mdFiles.map(fileName => ({
-    id: fileName.replace(/\.md$/, '')
-  }));
+];
+
+// Generate static paths for all blog posts
+export function generateStaticParams() {
+  return blogPosts.map(post => ({ id: post.id }));
 }
 
 // Convert markdown to HTML
@@ -35,74 +28,54 @@ async function markdownToHtml(markdown) {
   return result.toString();
 }
 
+// Make the component async to properly handle async operations
 export default async function BlogPost({ params }) {
-  // Make sure params exists and has an id property
-  if (!params || !params.id) {
+  const { id } = params;
+  
+  // Find the blog post with the matching ID
+  const post = blogPosts.find(p => p.id === id);
+
+  if (!post) {
     return (
       <div className={styles.blogNotFound}>
         <h1>Blog Post Not Found</h1>
-        <p>Invalid blog post identifier.</p>
+        <p>The blog post you're looking for doesn't exist.</p>
         <Link href="/#blogs">Back to Blogs</Link>
       </div>
     );
   }
   
-  const id = params.id;
+  // Convert markdown content to HTML
+  const contentHtml = await markdownToHtml(post.content);
   
-  try {
-    const post = getBlogPostById(id);
-    
-    if (!post) {
-      return (
-        <div className={styles.blogNotFound}>
-          <h1>Blog Post Not Found</h1>
-          <p>The blog post you're looking for doesn't exist.</p>
-          <Link href="/#blogs">Back to Blogs</Link>
+  return (
+    <div className={styles.blogPostContainer}>
+      <header className={styles.blogPostHeader}>
+        <h1>{post.title}</h1>
+        <p className={styles.blogPostDate}>
+          {new Date(post.date).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })}
+        </p>
+      </header>
+      
+      {post.coverImage && (
+        <div className={styles.blogPostImage}
+             style={{ backgroundImage: `url(${post.coverImage})` }}>
         </div>
-      );
-    }
-    
-    // Convert markdown content to HTML
-    const contentHtml = await markdownToHtml(post.content);
-    
-    return (
-      <div className={styles.blogPostContainer}>
-        <header className={styles.blogPostHeader}>
-          <h1>{post.title}</h1>
-          <p className={styles.blogPostDate}>
-            {new Date(post.date).toLocaleDateString('en-US', { 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </p>
-        </header>
-        
-        {post.coverImage && (
-          <div className={styles.blogPostImage}
-               style={{ backgroundImage: `url(${post.coverImage})` }}>
-          </div>
-        )}
-        
-        <div className={styles.blogPostContent}>
-          <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-        </div>
-        
-        <div className={styles.blogPostNavigation}>
-          <Link href="/#blogs" className={styles.backToBlogs}>
-            ← Back to All Blogs
-          </Link>
-        </div>
+      )}
+      
+      <div className={styles.blogPostContent}>
+        <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </div>
-    );
-  } catch (error) {
-    console.error(`Error rendering blog post ${id}:`, error);
-    return (
-      <div className={styles.blogNotFound}>
-        <h1>Error Loading Blog Post</h1>
-        <p>There was a problem loading this blog post. Please try again later.</p>
-        <Link href="/#blogs">Back to Blogs</Link>
+      
+      <div className={styles.blogPostNavigation}>
+        <Link href="/#blogs" className={styles.backToBlogs}>
+          ← Back to All Blogs
+        </Link>
       </div>
-    );
-  }
+    </div>
+  );
 }

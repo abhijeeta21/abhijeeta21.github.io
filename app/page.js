@@ -5,14 +5,26 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
 import ContactForm from './components/ContactForm';
-import TypedText from './components/TypedText';
+// Import only what we need - we'll handle the blog posts differently
+// import TypedText from './components/TypedText';
+
+// Static blog posts for client-side rendering
+const staticBlogPosts = [
+  {
+    id: 'HSS',
+    title: "Missing the HSS Pre-Registration Deadline",
+    date: "2025-04-15",
+    excerpt: "Why professors are so negligient giving courses if a student misses the HSS pre-registration",
+    coverImage: "/images/blog/react-hooks.jpg"
+  }
+];
 
 export default function Home() {
   // Reference for mouse following effect
   const circleRef = useRef(null);
-  // State for blog posts
-  const [blogPosts, setBlogPosts] = useState([]);
-  const [blogsLoading, setBlogsLoading] = useState(true);
+  // State for blog posts - initialized with static data
+  const [blogPosts, setBlogPosts] = useState(staticBlogPosts);
+  const [blogsLoading, setBlogsLoading] = useState(false);
   
   useEffect(() => {
     // Mouse follow effect for hero section
@@ -69,24 +81,7 @@ export default function Home() {
     
     window.addEventListener('scroll', animateOnScroll);
     
-    // Fetch blog posts
-    const fetchBlogPosts = async () => {
-      try {
-        const response = await fetch('/api/blogs');
-        if (response.ok) {
-          const data = await response.json();
-          setBlogPosts(data.slice(0, 3)); // Get the first 3 blog posts
-        } else {
-          console.error('Failed to fetch blog posts');
-        }
-      } catch (error) {
-        console.error('Error fetching blog posts:', error);
-      } finally {
-        setBlogsLoading(false);
-      }
-    };
-    
-    fetchBlogPosts();
+    // No need to fetch blog posts - we're using static data
     
     // Clean up event listeners
     return () => {
@@ -97,7 +92,7 @@ export default function Home() {
     };
   }, []);
 
-  // Blogs Section - updated to use real blog data
+  // Blogs Section - with static blog posts
   const renderBlogsSection = () => {
     if (blogsLoading) {
       return (
@@ -150,7 +145,7 @@ export default function Home() {
           
           <div className={styles.blendMultiply + ' ' + styles.fullSize}>
             <div className={styles.animatedBg + ' ' + styles.fullSize} 
-                 style={{backgroundImage: "url('./images/hero-bg-dark.jpg')"}}></div>
+                 style={{backgroundImage: "url('/images/hero-bg-dark.jpg')"}}></div>
             
             <div className={styles.blendScreen + ' ' + styles.elementMask + ' ' + styles.fullSize}>
               <span ref={circleRef} className={styles.circleFollow}>
@@ -233,7 +228,7 @@ export default function Home() {
             <div className={styles.aboutImage}>
               <div className={styles.imageContainer}>
                 <Image 
-                  src="./images/profile.jpg" 
+                  src="/images/profile.jpg" 
                   alt="Abhijeet" 
                   width={280}
                   height={350}

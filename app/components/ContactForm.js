@@ -12,9 +12,22 @@ export default function ContactForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('sending');
-
+    
+    // For static site deployment - simulate form submission
+    setTimeout(() => {
+      setStatus('success');
+      setName('');
+      setEmail('');
+      setMessage('');
+      
+      // Log the form data for demonstration purposes
+      console.log('Form submitted (static version):', { name, email, message });
+    }, 1000);
+    
+    // In a real deployment, you would use a service like Formspree:
+    /*
     try {
-      const response = await fetch('/api/contact/route', {
+      const response = await fetch('https://formspree.io/f/your-form-id', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,6 +46,7 @@ export default function ContactForm() {
     } catch (error) {
       setStatus('error');
     }
+    */
   };
 
   return (
@@ -107,6 +121,9 @@ export default function ContactForm() {
       {status === 'success' && (
         <div style={{ marginTop: '1rem', color: '#06b6d4', fontWeight: 500, textAlign: 'center' }}>
           Thanks for reaching out! I'll get back to you as soon as possible. 🚀
+          <p style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>
+            (Note: This is a static site demo - the message wasn't actually sent)
+          </p>
         </div>
       )}
       
