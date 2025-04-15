@@ -11,7 +11,7 @@ const nextConfig = {
       },
     ],
     // Make images work properly with static exports
-    unoptimized: process.env.NODE_ENV === 'production',
+    unoptimized: true,
   },
   
   // Only enable strict mode in production for faster development experience
@@ -26,11 +26,8 @@ const nextConfig = {
     optimizePackageImports: ['react-dom', 'react'],
   },
 
-  // Set the base path for GitHub Pages deployment
-  basePath: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_PATH || '' : '',
-  
-  // Set assetPrefix for GitHub Pages
-  assetPrefix: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_PATH || '' : '',
+  // Set the base path for GitHub Pages deployment (empty for username.github.io repos)
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   
   // Use static output for GitHub Pages compatibility
   output: 'export',
