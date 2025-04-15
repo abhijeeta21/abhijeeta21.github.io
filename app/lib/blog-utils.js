@@ -1,13 +1,23 @@
-// Import modules conditionally to support static export
-let fs;
-let path;
-let matter;
+import fs from 'fs';
+import path from 'path';
 
-// Only import Node.js modules during build time
-if (typeof window === 'undefined') {
-  fs = require('fs');
-  path = require('path');
-  matter = require('gray-matter');
+const blogsDirectory = path.join(process.cwd(), 'public', 'api', 'blogs');
+
+// Get all blog posts
+export function getAllBlogPosts() {
+  const filePath = path.join(blogsDirectory, 'blogs.json');
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(fileContents);
+}
+
+// Get a specific blog post by ID
+export function getBlogPostById(id) {
+  const filePath = path.join(blogsDirectory, `${id}.json`);
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(fileContents);
 }
 
 // Static blog data for client-side usage
@@ -28,80 +38,6 @@ function getBlogsDirectory() {
     return path.join(process.cwd(), 'app/data/blogs');
   }
   return null;
-}
-
-// Get all blog posts
-export function getAllBlogPosts() {
-  // If running in browser, return static data
-  if (typeof window !== 'undefined') {
-    return staticBlogPosts;
-  }
-  
-  const blogsDirectory = getBlogsDirectory();
-  
-  // Ensure the directory exists
-  if (!fs.existsSync(blogsDirectory)) {
-    return staticBlogPosts;
-  }
-  
-  // Get all files from the blogs directory
-  const fileNames = fs.readdirSync(blogsDirectory);
-  
-  // Filter out the README.md file and any non-markdown files
-  const mdFiles = fileNames.filter(file => 
-    file.endsWith('.md') && file !== 'README.md'
-  );
-
-  const allBlogsData = mdFiles.map(fileName => {
-    // Remove ".md" from file name to get id
-    const id = fileName.replace(/\.md$/, '');
-
-    // Read markdown file as string
-    const fullPath = path.join(blogsDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-
-    // Use gray-matter to parse the post metadata section
-    const matterResult = matter(fileContents);
-
-    // Ensure coverImage path is prefixed correctly for GitHub Pages
-    let coverImage = matterResult.data.coverImage || '/images/blog/default.jpg';
-    
-    // Combine the data with the id
-    return {
-      id,
-      ...matterResult.data,
-      coverImage,
-      content: matterResult.content
-    };
-  });
-
-  // Sort posts by date
-  return allBlogsData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
-}
-
-// Get a specific blog post by ID
-export function getBlogPostById(id) {
-  try {
-    // If running in browser, return from static data
-    if (typeof window !== 'undefined') {
-      return staticBlogPosts.find(post => post.id === id);
-    }
-    
-    // Find all blog posts first
-    const allPosts = getAllBlogPosts();
-    
-    // Find the post with matching ID
-    return allPosts.find(post => post.id === id);
-  } catch (error) {
-    console.error(`Error getting blog post with id ${id}:`, error);
-    return null;
-  }
 }
 
 // The following functions will only work server-side during build time

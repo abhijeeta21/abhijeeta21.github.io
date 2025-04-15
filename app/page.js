@@ -5,8 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
 import ContactForm from './components/ContactForm';
-// Import only what we need - we'll handle the blog posts differently
-// import TypedText from './components/TypedText';
+import { getAllBlogPosts } from './lib/blog-utils';
 
 // Static blog posts for client-side rendering
 const staticBlogPosts = [
