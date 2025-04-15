@@ -2,7 +2,14 @@ export const dynamic = "force-static";
 export const dynamicParams = false;
 export const revalidate = false;
 
-import { getBlogPostById, updateBlogPost, deleteBlogPost } from '../../../lib/blog-utils';
+// This function is required for static export with dynamic routes
+export function generateStaticParams() {
+  return [
+    { id: 'HSS' }
+  ];
+}
+
+import { getBlogPostById } from '../../../lib/blog-utils';
 
 // GET handler to retrieve a specific blog post
 export async function GET(request, { params }) {
@@ -39,104 +46,23 @@ export async function GET(request, { params }) {
   }
 }
 
-// PUT handler to update a blog post
-export async function PUT(request, { params }) {
-  try {
-    // In a real application, you should add authentication here
-    
-    const { id } = params;
-    const data = await request.json();
-    const { title, content, excerpt, coverImage } = data;
-    
-    // Validate required fields
-    if (!title || !content) {
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          message: 'Title and content are required.' 
-        }),
-        { 
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
+// Stub functions for static export
+export async function PUT() {
+  return new Response(
+    JSON.stringify({ error: 'Not implemented in static export' }),
+    { 
+      status: 501,
+      headers: { 'Content-Type': 'application/json' }
     }
-    
-    // Update blog post
-    const result = updateBlogPost(
-      id,
-      title,
-      content,
-      excerpt || 'No excerpt provided',
-      coverImage || '/images/blog/default.jpg'
-    );
-    
-    if (result.success) {
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: 'Blog post updated successfully' 
-        }),
-        { 
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    } else {
-      throw new Error(result.error);
-    }
-  } catch (error) {
-    console.error('Error updating blog post:', error);
-    
-    return new Response(
-      JSON.stringify({ 
-        success: false, 
-        message: 'Failed to update blog post' 
-      }),
-      { 
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-  }
+  );
 }
 
-// DELETE handler to delete a blog post
-export async function DELETE(request, { params }) {
-  try {
-    // In a real application, you should add authentication here
-    
-    const { id } = params;
-    
-    // Delete blog post
-    const result = deleteBlogPost(id);
-    
-    if (result.success) {
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          message: 'Blog post deleted successfully' 
-        }),
-        { 
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    } else {
-      throw new Error(result.error);
+export async function DELETE() {
+  return new Response(
+    JSON.stringify({ error: 'Not implemented in static export' }),
+    { 
+      status: 501,
+      headers: { 'Content-Type': 'application/json' }
     }
-  } catch (error) {
-    console.error('Error deleting blog post:', error);
-    
-    return new Response(
-      JSON.stringify({ 
-        success: false, 
-        message: 'Failed to delete blog post' 
-      }),
-      { 
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-  }
+  );
 }
